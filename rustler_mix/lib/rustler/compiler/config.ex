@@ -99,6 +99,12 @@ defmodule Rustler.Compiler.Config do
     packages
     |> gather_local_crates([crate_spec], [crate_path], MapSet.new([crate_str]))
     |> Enum.flat_map(&expand_paths/1)
+    |> remove_directories()
+  end
+
+  defp remove_directories(paths) do
+    paths
+    |> Enum.filter(&File.stat!(&1).type == :regular)
   end
 
   defp expand_paths(path) do
